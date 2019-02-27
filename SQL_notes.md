@@ -8,14 +8,15 @@
   * root# postgresql-setup --initdb --unit postgresql
   * root# systemctl enable postgresql
 	
-*runs server (not required for debian)
-	*root# systemctl start postgresql
-*creates user role
-	    root# passwd postgres
-	    postgres$ createuser carlos
-	    postgres$ psql
-			ALTER USER carlos SUPERUSER;
-			ALTER USER carlos PASSWORD 'pass';
+* run server (not required for debian)
+  * root# systemctl start postgresql
+  
+* create user role
+  * root# passwd postgres
+  * postgres$ createuser carlos
+  * postgres$ psql
+    * ALTER USER carlos SUPERUSER;
+    * ALTER USER carlos PASSWORD 'pass';
 		
 	create db
 	    carlos$ createdb gis
