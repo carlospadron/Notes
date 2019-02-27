@@ -83,27 +83,9 @@
       * osm2pgsql -C 27000 Documents/british-isles-latest.osm.pbf 
      
 # SQL/PSQL
-* add column
-  * ALTER TABLE planet_osm_line ADD COLUMN "gid" serial;
-  
-* describe columns
-  * \d table
-  
-* copy
-  * standard
-    * COPY table to 'test.csv' WIT CSV HEADER;
-  * for non-superuser
-    * \COPY table to 'test.csv' WIT CSV HEADER;
-  * with psql
-    * psql gis -c "COPY schema.table FROM 'test.csv' DELIMITER ',' CSV HEADER"
-    
-* logging
-  * psql --log-file   
-
-* read only databases
-  * ALTER DATABASE gis SET default_transaction_read_only=on;
-  * ALTER DATABASE gis SET default_transaction_read_only=off;
-
+* alter table
+  * add column
+    * ALTER TABLE planet_osm_line ADD COLUMN "gid" serial;
 * backup
   * one database, plain text
     * pg_dump gis > newbackup.txt
@@ -116,10 +98,25 @@
   * all databases
     * pg_dumpall > database.txt 
     * psql -f database.txt postgres
-
-* formtatting
-  * use plugin pg_formatter from atom
+    
+* execute  
+  * command
+    psql -c "sql command"
   
+  * read commands from file
+    psql -f "file with commands"
+    
+* copy
+  * standard
+    * COPY table to 'test.csv' WIT CSV HEADER;
+  * for non-superuser
+    * \COPY table to 'test.csv' WIT CSV HEADER;
+  * with psql
+    * psql gis -c "COPY schema.table FROM 'test.csv' DELIMITER ',' CSV HEADER"  
+    
+* describe columns
+  * \d table
+
 * foreign tables
   * extension
     * CREATE EXTENSION postgres_fdw;
@@ -139,6 +136,16 @@
   * list foreign tables
     * SELECT * FROM information_schema.foreign_tables;
 
+* formatting
+  * use plugin pg_formatter from atom
+    
+* logging
+  * psql --log-file   
+
+* read only databases
+  * ALTER DATABASE gis SET default_transaction_read_only=on;
+  * ALTER DATABASE gis SET default_transaction_read_only=off;
+  
 # Environment variables
 * change encoding on shell
   * PGCLIENTENCODING=LATIN1 
