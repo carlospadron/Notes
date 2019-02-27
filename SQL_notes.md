@@ -38,10 +38,10 @@
     * root# nano /etc/selinux/config ()
   * reboot
 
-* Notes 
-  * For pg_hba.conf: provide the right permissions otherwise Qgis might complain
-  * For postgresql.conf: adjust working memory if needed
-  * For Qgis: when connecting to postgis, leave empty the field host if the connection is local
+* notes 
+  * for pg_hba.conf: provide the right permissions otherwise Qgis might complain
+  * for postgresql.conf: adjust working memory if needed
+  * for Qgis: when connecting to postgis, leave empty the field host if the connection is local
   
 ## Pgadmin4
 * installing and running Pgadmin4
@@ -49,67 +49,64 @@
     * python3 -m venv --copies /home/carlos/Dropbox/virtualEnv/pgadmin
   * activate virtual environment
     * source Dropbox/virtualEnv/pgadmin/bin/activate
-  * Download pgadmin4
+  * download pgadmin4
     * wget https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v3.6/pip/pgadmin4-3.6-py2.py3-none-any.whlD
   * install pgadmin4
     * pip3 install pgadmin4-3.6-py2.py3-none-any.whl
   * run pgadmin4
     * python3 Dropbox/virtualEnv/pgadmin/lib64/python3.6/site-packages/pgadmin4/pgAdmin4.py 
   
-
-     
-    Read only databases
-		ALTER DATABASE cartografia SET default_transaction_read_only=on;
-	    SET default_transaction_read_only=off;
-	    ALTER DATABASE cartografia SET default_transaction_read_only=off;
-			
-    Backup
-        one database
-	    	pg_dump > base.txt
-			psql base < base.txt
-		        
-	    all databases
-		    pg_dumpall > base.txt 
-		    psql -f base.txt postgres
-
+# POSTGIS 
+  * setting
+    * psql -d gis -c "CREATE EXTENSION postgis;"
+    * psql -d gis -c "CREATE EXTENSION postgis_topology;"
+    * psql -d gis -c "CREATE EXTENSION postgis_sfcgal;"
+    
+  * spatial column
+    * create column
+      * SELECT AddGeometryColumn ('ucl','road_data','geom',27700,'POINT',2);
+    * update from lat and lon columns
+      * UPDATE ucl.road_data SET geom = ST_SetSRID(ST_Point(lon, lat), 27700);
+    * reading from hex code (hex is the typical postgis output)
+      * UPDATE ucl.road_data SET geom = ST_GeomFROMEWKB(geom_text::geometry) 
+    * create index
+      * CREATE INDEX road_data_gix ON ucl.road_data USING GIST (geom);
 
     
-    Sql
-			  
-   Add column
-     ALTER TABLE planet_osm_line ADD COLUMN "gid" serial;
+  * openstreetmap
+    * loading openstreetmap to postgis database (writes to gis database by default).
+      * osm2pgsql -C 27000 Documents/british-isles-latest.osm.pbf 
+     
+# SQL/PSQL
+* add column
+  * ALTER TABLE planet_osm_line ADD COLUMN "gid" serial;
+  
+* describe columns
+  * \d table
+  
+* copy
+  * standard
+    * COPY table to 'test.csv' WIT CSV HEADER;
+  * for non-superuser
+    * \COPY table to 'test.csv' WIT CSV HEADER;
+  * with psql
+    * psql gis -c "COPY schema.table FROM 'test.csv' DELIMITER ',' CSV HEADER"
+    
+* Logfile
+  * psql --log-file   
 
-   Describe columns
-	   \d table
+* Read only databases
+  * ALTER DATABASE gis SET default_transaction_read_only=on;
+  * ALTER DATABASE gis SET default_transaction_read_only=off;
 
-    change encoding on shell
-		   PGCLIENTENCODING=LATIN1 
-
-    Copy
-	   COPY (or \copy) table to 'test.csv' WIT CSV HEADER;
-	   psql gis -c "COPY schema.table FROM 'test.csv' DELIMITER ',' CSV HEADER"
-
-    Logfile
-	   psql --log-file 
-
-POSTGIS 
-    setting
-        psql -d gis -c "CREATE EXTENSION postgis;"
-	    psql -d gis -c "CREATE EXTENSION postgis_topology;"
-	    psql -d gis -c "CREATE EXTENSION postgis_sfcgal;"
-	column
-	    SELECT AddGeometryColumn ('ucl','road_data','geom',27700,'POINT',2);
-	    UPDATE ucl.road_data SET geom = ST_SetSRID(ST_Point(lon, lat), 27700);
-	Index
-	    CREATE INDEX road_data_gix ON ucl.road_data USING GIST (geom);
-    Openstreetmap
-	    Loading openstreetmap to postgis database (read to gis database by default).
-		    osm2pgsql -C 27000 Documents/british-isles-latest.osm.pbf 	    
-	    
-Data mangement and solutions
--unknown attributes: use xml or json columns
--complex joins: try to keep a simple data structure 
-	-no dpulications
-	-no unnecessary splits of tables
-	
--data management: databases ara for data, leave management to qgis or any other platfform
+* Backup
+  * one database
+    * pg_dump gis > database.txt
+    * psql gis < database.txt
+  * all databases
+    * pg_dumpall > database.txt 
+    * psql -f database.txt postgres
+    
+# Environment variables
+* change encoding on shell
+  * PGCLIENTENCODING=LATIN1 
