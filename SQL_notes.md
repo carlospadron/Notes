@@ -117,6 +117,10 @@
 * describe columns
   * \d table
 
+* duplicates
+  * find and count duplicates
+    * SELECT id, count(*) FROM table1 GROUP BY id HAVING count(*) > 1
+
 * foreign tables
   * extension
     * CREATE EXTENSION postgres_fdw;
@@ -145,7 +149,34 @@
 * read only databases
   * ALTER DATABASE gis SET default_transaction_read_only=on;
   * ALTER DATABASE gis SET default_transaction_read_only=off;
-  
+
+* terminate queries
+  * list active queries
+    * select * from pg_stat_activity where state = 'active';
+    
+  * cancel query
+    * select pg_cancel_backend(id);
+    
+  * terminate query
+    * select pg_terminate_backend(id);
+
+# PL/pgPSQL
+
+* functions
+  <
+    CREATE OR REPLACE FUNCTION myfunction() RETURNS trigger AS $$
+    BEGIN
+      NEW.col1 = val1;
+      NEW.col2 = (SELECT val2 FROM table 2);
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+  >
+* triggers
+  < CREATE TRIGGER myfunction
+    BEFORE INSERT OR UPDATE ON schema1.table1
+    FOR EACH ROW EXECUTE PROCEDURE myfunction(); >
+    
 # Environment variables
 * change encoding on shell
   * PGCLIENTENCODING=LATIN1 
