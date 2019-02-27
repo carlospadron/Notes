@@ -81,6 +81,10 @@
   * openstreetmap
     * loading openstreetmap to postgis database (writes to gis database by default).
       * osm2pgsql -C 27000 Documents/british-isles-latest.osm.pbf 
+    
+    * loading openstreetmap to pgrouting
+      * osm2pgrouting --f "P:\somewhere\latest.osm_01.osm" --clean --dbname gis --username carlos --schema osm_routing --conf "C:\somewhere\mapconfig.xml"
+
      
 # SQL/PSQL
 * alter table
