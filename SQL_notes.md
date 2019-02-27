@@ -162,8 +162,8 @@
 
 # PL/pgPSQL
 
-* triggers
-  * trigger function
+## triggers
+### trigger function
 ```sql
 CREATE OR REPLACE FUNCTION myfunction() RETURNS trigger AS $$
 BEGIN
@@ -173,7 +173,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 ```
-  * create trigger
+### create trigger
 ```sql
 CREATE TRIGGER myfunction
 BEFORE INSERT OR UPDATE ON schema1.table1
