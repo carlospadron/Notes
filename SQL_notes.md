@@ -119,8 +119,8 @@
 
 * duplicates
   * find and count duplicates
-    * SELECT id, count(*) FROM table1 GROUP BY id HAVING count(*) > 1
-
+    * SELECT id, count( * ) FROM table1 GROUP BY id HAVING count( * ) > 1
+ 
 * foreign tables
   * extension
     * CREATE EXTENSION postgres_fdw;
