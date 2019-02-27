@@ -265,7 +265,7 @@ WITH driving_distance AS (
 SELECT 
   A.*
 FROM
-  schema1.network_noded AS A',
+  schema1.network_noded AS A,
   driving_distance AS source,
   driving_distance AS target
 WHERE
