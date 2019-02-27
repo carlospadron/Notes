@@ -149,6 +149,9 @@
 * read only databases
   * ALTER DATABASE gis SET default_transaction_read_only=on;
   * ALTER DATABASE gis SET default_transaction_read_only=off;
+  
+* series
+  * SELECT generate_series(min, max, step);
 
 * terminate queries
   * list active queries
