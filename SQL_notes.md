@@ -1,12 +1,12 @@
 # Postgresql
 ## Server setting
 
-*READ https://fedoraproject.org/wiki/PostgreSQL for Fedora
-*READ https://wiki.debian.org/PostgreSql for Debian
+* READ https://fedoraproject.org/wiki/PostgreSQL for Fedora
+* READ https://wiki.debian.org/PostgreSql for Debian
 
-*create cluster (not required for debian)
-  *root# postgresql-setup --initdb --unit postgresql
-	*root# systemctl enable postgresql
+* create cluster (not required for debian)
+  * root# postgresql-setup --initdb --unit postgresql
+  * root# systemctl enable postgresql
 	
 *runs server (not required for debian)
 	*root# systemctl start postgresql
