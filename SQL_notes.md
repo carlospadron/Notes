@@ -65,14 +65,19 @@
   * spatial column
     * create column
       * SELECT AddGeometryColumn ('ucl','road_data','geom',27700,'POINT',2);
+      
     * update from lat and lon columns
       * UPDATE ucl.road_data SET geom = ST_SetSRID(ST_Point(lon, lat), 27700);
+      
     * reading from hex code (hex is the typical postgis output)
       * UPDATE ucl.road_data SET geom = ST_GeomFROMEWKB(geom_text::geometry) 
+      
     * create index
       * CREATE INDEX road_data_gix ON ucl.road_data USING GIST (geom);
+      
+    * add id column for qgis (if not present Qgis will not allow updates to the table)
+      * ALTER TABLE table1 ADD PRIMARY KEY (id);
 
-    
   * openstreetmap
     * loading openstreetmap to postgis database (writes to gis database by default).
       * osm2pgsql -C 27000 Documents/british-isles-latest.osm.pbf 
@@ -92,21 +97,48 @@
   * with psql
     * psql gis -c "COPY schema.table FROM 'test.csv' DELIMITER ',' CSV HEADER"
     
-* Logfile
+* logging
   * psql --log-file   
 
-* Read only databases
+* read only databases
   * ALTER DATABASE gis SET default_transaction_read_only=on;
   * ALTER DATABASE gis SET default_transaction_read_only=off;
 
-* Backup
-  * one database
-    * pg_dump gis > database.txt
-    * psql gis < database.txt
+* backup
+  * one database, plain text
+    * pg_dump gis > newbackup.txt
+    * psql gis < newbackup.txt
+    
+  * one database, custom format
+    * pg_dump -Fc -h 192.168.0.1 -p 5432 -U carlos -d gis -n schema1 > newbackup.backup
+    * pg_restore -h localhost -C -d gis newbackup.backup
+    
   * all databases
     * pg_dumpall > database.txt 
     * psql -f database.txt postgres
+
+* formtatting
+  * use plugin pg_formatter from atom
+  
+* foreign tables
+  * extension
+    * CREATE EXTENSION postgres_fdw;
     
+  * create validator
+    * CREATE FOREIGN DATA WRAPPER giswrapper HANDLER postgres_fdw_handler VALIDATOR postgres_fdw_validator;
+    
+  * create server
+    * CREATE SERVER externalgis FOREIGN DATA WRAPPER giswrapper OPTIONS (host '192.168.0.1', dbname 'gis', port '5432')
+    
+  * create user mapping (user and password must be present on foreign server, user on first part can be PUBLIC or role)
+    * CREATE USER MAPPING FOR "carlos" SERVER externalgis OPTIONS (user "carlos", password "pass"); 
+    
+  * create foreign table
+    * CREATE FOREIGN TABLE  schema1.table1 (col1 serial NOT NULL,, col2 text) SERVER externalgis;
+    
+  * list foreign tables
+    * SELECT * FROM information_schema.foreign_tables;
+
 # Environment variables
 * change encoding on shell
   * PGCLIENTENCODING=LATIN1 
