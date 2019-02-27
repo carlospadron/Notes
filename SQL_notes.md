@@ -267,7 +267,7 @@ SELECT
 FROM
   schema1.network_noded AS A',
   driving_distance AS source,
-  driving_distance AS target,
+  driving_distance AS target
 WHERE
   A.source = source.node
   AND A.target  = target.node
