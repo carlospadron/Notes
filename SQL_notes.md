@@ -215,9 +215,9 @@ FROM
        cost
      FROM 
        schema1.network_noded',
-       node1,
-       node2,
-       FALSE --directed);
+     node1,
+     node2,
+     FALSE --directed);
 ```
 
 ## calculate route and return map
@@ -259,8 +259,8 @@ WITH driving_distance AS (
          cost 
        FROM 
          schema1.network_noded AS A',
-         (SELECT array_agg(points.id) FROM schema1.access_points WHERE type = 'train station'),
-       960,
+       (SELECT array_agg(points.id) FROM schema1.access_points WHERE type = 'train station'),
+       node2,
        FALSE --directed ))  
 SELECT 
   A.*
