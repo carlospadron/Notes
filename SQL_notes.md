@@ -163,7 +163,7 @@
 # PL/pgPSQL
 
 * functions
-``` sql
+```sql
 CREATE OR REPLACE FUNCTION myfunction() RETURNS trigger AS $$
 BEGIN
   NEW.col1 = val1;
@@ -173,10 +173,12 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 * triggers
-  > CREATE TRIGGER myfunction
-  > BEFORE INSERT OR UPDATE ON schema1.table1
-  > FOR EACH ROW EXECUTE PROCEDURE myfunction(); 
-    
+```sql
+CREATE TRIGGER myfunction
+BEFORE INSERT OR UPDATE ON schema1.table1
+FOR EACH ROW EXECUTE PROCEDURE myfunction(); 
+```
+
 # Environment variables
 * change encoding on shell
   * PGCLIENTENCODING=LATIN1 
