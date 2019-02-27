@@ -163,19 +163,18 @@
 # PL/pgPSQL
 
 * functions
-  <
-    CREATE OR REPLACE FUNCTION myfunction() RETURNS trigger AS $$
-    BEGIN
-      NEW.col1 = val1;
-      NEW.col2 = (SELECT val2 FROM table 2);
-      RETURN NEW;
-    END;
-    $$ LANGUAGE plpgsql;
-  >
+  > CREATE OR REPLACE FUNCTION myfunction() RETURNS trigger AS $$
+  > BEGIN
+  >   NEW.col1 = val1;
+  >   NEW.col2 = (SELECT val2 FROM table 2);
+  >   RETURN NEW;
+  >  END;
+  >  $$ LANGUAGE plpgsql;
+
 * triggers
-  < CREATE TRIGGER myfunction
-    BEFORE INSERT OR UPDATE ON schema1.table1
-    FOR EACH ROW EXECUTE PROCEDURE myfunction(); >
+  > CREATE TRIGGER myfunction
+  > BEFORE INSERT OR UPDATE ON schema1.table1
+  > FOR EACH ROW EXECUTE PROCEDURE myfunction(); 
     
 # Environment variables
 * change encoding on shell
