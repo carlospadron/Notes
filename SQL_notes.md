@@ -63,6 +63,8 @@
     * psql -d gis -c "CREATE EXTENSION postgis_sfcgal;"
     
   * spatial column
+    * create table
+      * CREATE TABLE schema.table (id serial primary key, geom geometry('POLYGON', 27700))
     * create column
       * SELECT AddGeometryColumn ('ucl','road_data','geom',27700,'POINT',2);
       
@@ -143,6 +145,8 @@
     
   * list foreign tables
     * SELECT * FROM information_schema.foreign_tables;
+  * modify foreign table
+    * ALTER FOREFG TABLE schema.table ADD COLUMN col;
 
 * formatting
   * use plugin pg_formatter from atom
@@ -150,6 +154,14 @@
 * logging
   * psql --log-file   
 
+* primary key
+  * add primary key when table is created
+    * CREATE TABLE schema.table (id serial primary key);
+  * create sequence and add column to existing table
+    * CREATE SEQUENCE schema.serial1 START (SELECT max(A.col) FROM A);
+    * ALTER TABLE schema.table ALTER COLUMN col SET DEFAULT nextval('schema.serial1');
+    * ALTER TABLE table_name ADD PRIMARY KEY (col);
+    
 * read only databases
   * ALTER DATABASE gis SET default_transaction_read_only=on;
   * ALTER DATABASE gis SET default_transaction_read_only=off;
