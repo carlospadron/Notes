@@ -30,6 +30,7 @@
   * root# nano /etc/postgresql/10/main/pg_hba.conf 
   * root# nano /etc/postgresql/10/main/postgresql.conf 
   * root# /etc/init.d/postgresql reload	  
+  * nano pgpass.conf --optional password file
 
 * configure firewall
   * root# firewall-cmd --permanent --add-port=5432/tcp
@@ -161,10 +162,18 @@
     * CREATE SEQUENCE schema.serial1 START (SELECT max(A.col) FROM A);
     * ALTER TABLE schema.table ALTER COLUMN col SET DEFAULT nextval('schema.serial1');
     * ALTER TABLE table_name ADD PRIMARY KEY (col);
-    
-* read only databases
-  * ALTER DATABASE gis SET default_transaction_read_only=on;
-  * ALTER DATABASE gis SET default_transaction_read_only=off;
+
+* permissions and constraints 
+  * permissions
+    * GRANT CONNECT ON DATABASE db TO role/user;
+    * GRANT SELECT ON TABLE schema.table TO role/user;
+    * REVOKE ALL ON TABLE schema.table FROM role/user;
+    * GRANT USAGE ON SCHEMA schema TO role/user;
+    * GRANT SELECT ON ALL TABLES IN SCHEMA schema TO role/user;
+
+  * read only databases
+    * ALTER DATABASE db SET default_transaction_read_only=on;
+    * ALTER DATABASE db SET default_transaction_read_only=off;
   
 * series
   * SELECT generate_series(min, max, step);
@@ -178,6 +187,10 @@
     
   * terminate query
     * select pg_terminate_backend(id);
+* users
+  * CREATE USER "user" WITH PASSWORD 'pass';
+* values
+  SELECT * FROM (VALUES (a,b,c), (1,2,3)) AS A;
 
 # PL/pgPSQL
 
