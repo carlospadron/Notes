@@ -190,7 +190,8 @@
 * users
   * CREATE USER "user" WITH PASSWORD 'pass';
 * values
-  SELECT * FROM (VALUES (a,b,c), (1,2,3)) AS A;
+
+  * SELECT * FROM (VALUES (a,b,c), (1,2,3)) AS A;
 
 # PL/pgPSQL
 
