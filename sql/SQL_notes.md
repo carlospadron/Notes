@@ -13,10 +13,12 @@
   
 * create user role
   * root# passwd postgres
-  * postgres$ createuser carlos
+  * postgres$ createuser carlos 
   * postgres$ psql
     * ALTER USER carlos SUPERUSER;
     * ALTER USER carlos PASSWORD 'pass';
+  * OR 
+    * CREATE USER "carlos" WITH PASSWORD 'xyz';
 		
 * create db
   * carlos$ createdb gis
