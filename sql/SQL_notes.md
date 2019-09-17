@@ -90,17 +90,32 @@ adjust config to permissive:
 when connecting to postgis, leave empty the field host if the connection is local
   
 ## Pgadmin4
-* installing and running Pgadmin4
-  * create virtual environment
-    * python3 -m venv --copies /home/carlos/Dropbox/virtualEnv/pgadmin
-  * activate virtual environment
-    * source Dropbox/virtualEnv/pgadmin/bin/activate
-  * download pgadmin4
-    * wget https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v3.6/pip/pgadmin4-3.6-py2.py3-none-any.whlD
-  * install pgadmin4
-    * pip3 install pgadmin4-3.6-py2.py3-none-any.whl
-  * run pgadmin4
-    * python3 Dropbox/virtualEnv/pgadmin/lib64/python3.6/site-packages/pgadmin4/pgAdmin4.py 
+
+### via repository
+
+READ https://wiki.postgresql.org/wiki/Apt
+
+### via pip
+
+create virtual environment
+
+`python3 -m venv --copies /home/carlos/Dropbox/virtualEnv/pgadmin`
+
+activate virtual environment
+
+`source Dropbox/virtualEnv/pgadmin/bin/activate`
+
+download pgadmin4
+
+`wget https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v3.6/pip/pgadmin4-3.6-py2.py3-none-any.whlD`
+
+install pgadmin4
+
+`pip3 install pgadmin4-3.6-py2.py3-none-any.whl`
+
+run pgadmin4
+
+`python3 Dropbox/virtualEnv/pgadmin/lib64/python3.6/site-packages/pgadmin4/pgAdmin4.py`
   
 # POSTGIS 
   * setting
