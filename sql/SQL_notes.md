@@ -6,14 +6,17 @@
 
 ### create cluster (not required for debian) 
 
-`sudo postgresql-setup --initdb --unit postgresql`
-
-`sudo systemctl enable postgresql`
+```
+sudo postgresql-setup --initdb --unit postgresql
+sudo systemctl enable postgresql
+```
 	
-* run server (not required for debian)
-  * root# systemctl start postgresql
+### run server (not required for debian)
+
+`sudo systemctl start postgresql`
   
-* create user role
+### create user role
+
   * root# passwd postgres
   * postgres$ createuser carlos 
   * postgres$ psql
