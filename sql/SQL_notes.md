@@ -15,15 +15,34 @@ sudo systemctl enable postgresql
 
 `sudo systemctl start postgresql`
   
-### create user role
+### user roles
 
-  * root# passwd postgres
-  * postgres$ createuser carlos 
-  * postgres$ psql
-    * ALTER USER carlos SUPERUSER;
-    * ALTER USER carlos PASSWORD 'pass';
-  * OR 
-    * CREATE USER "carlos" WITH PASSWORD 'xyz';
+create superuser with password from terminal
+
+```
+sudo passwd postgres
+su postgres
+createuser carlos -s -P
+```
+
+create superuser with password from psql
+
+```
+sudo passwd postgres
+su postgres
+psql
+CREATE USER "carlos" WITH PASSWORD 'xyz';
+\q
+```
+
+Alter roles
+
+```
+psql
+ALTER USER carlos SUPERUSER;
+ALTER USER carlos PASSWORD 'pass';
+\q
+```
 		
 * create db
   * carlos$ createdb gis
