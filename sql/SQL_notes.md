@@ -47,6 +47,7 @@ ALTER USER carlos PASSWORD 'pass';
 ### databases
 		
 create db
+
 `createdb gis`
 
 ### configuration files
