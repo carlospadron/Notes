@@ -31,7 +31,7 @@ create superuser with password from psql
 sudo passwd postgres
 su postgres
 psql
-CREATE USER "carlos" WITH PASSWORD 'xyz';
+CREATE USER "carlos" WITH SUPERUSER PASSWORD 'xyz';
 \q
 ```
 
@@ -43,32 +43,50 @@ ALTER USER carlos SUPERUSER;
 ALTER USER carlos PASSWORD 'pass';
 \q
 ```
+
+### databases
 		
-* create db
-  * carlos$ createdb gis
-  
-* configure server (fedora)
-  * root# nano /var/lib/pgsql/data/pg_hba.conf 
-  * root# nano /var/lib/pgsql/data/postgresql.conf 
-  * root# systemctl restart postgresql
+create db
+`createdb gis`
+
+### configuration files
+
+configure server (fedora)
+
+```
+sudo nano /var/lib/pgsql/data/pg_hba.conf 
+sudo nano /var/lib/pgsql/data/postgresql.conf 
+sudo systemctl restart postgresql
+```
 	    
-* configure server (debian, ubuntu)
-  * root# nano /etc/postgresql/10/main/pg_hba.conf 
-  * root# nano /etc/postgresql/10/main/postgresql.conf 
-  * root# /etc/init.d/postgresql reload	  
-  * nano pgpass.conf --optional password file
+configure server (debian, ubuntu)
 
-* configure firewall
-  * root# firewall-cmd --permanent --add-port=5432/tcp
-  * root# firewall-cmd --add-port=5432/tcp
-  * adjust config to permissive:
-    * root# nano /etc/selinux/config ()
-  * reboot
+```
+sudo nano /etc/postgresql/10/main/pg_hba.conf 
+sudo nano /etc/postgresql/10/main/postgresql.conf 
+sudo /etc/init.d/postgresql reload	
+```
 
-* notes 
-  * for pg_hba.conf: provide the right permissions otherwise Qgis might complain
-  * for postgresql.conf: adjust working memory if needed
-  * for Qgis: when connecting to postgis, leave empty the field host if the connection is local
+optional password file
+
+`nano pgpass.conf`
+
+### firewall config
+
+add ports:
+
+```
+sudo firewall-cmd --permanent --add-port=5432/tcp
+sudo firewall-cmd --add-port=5432/tcp
+```
+
+adjust config to permissive:
+
+`sudo nano /etc/selinux/config`
+
+## Qgis
+
+when connecting to postgis, leave empty the field host if the connection is local
   
 ## Pgadmin4
 * installing and running Pgadmin4
