@@ -87,7 +87,11 @@ adjust config to permissive:
 
 ## Qgis
 
-when connecting to postgis, leave empty the field host if the connection is local
+when connecting to postgis, leave empty the field host if the connection is local.
+
+add id column for qgis (if not present Qgis will not allow updates to the table)
+
+`ALTER TABLE table1 ADD PRIMARY KEY (id);`
   
 ## Pgadmin4
 
@@ -118,36 +122,46 @@ run pgadmin4
 `python3 Dropbox/virtualEnv/pgadmin/lib64/python3.6/site-packages/pgadmin4/pgAdmin4.py`
   
 # POSTGIS 
-  * setting
-    * psql -d gis -c "CREATE EXTENSION postgis;"
-    * psql -d gis -c "CREATE EXTENSION postgis_topology;"
-    * psql -d gis -c "CREATE EXTENSION postgis_sfcgal;"
-    
-  * spatial column
-    * create table
-      * CREATE TABLE schema.table (id serial primary key, geom geometry('POLYGON', 27700))
-    * create column
-      * SELECT AddGeometryColumn ('ucl','road_data','geom',27700,'POINT',2);
-      
-    * update from lat and lon columns
-      * UPDATE ucl.road_data SET geom = ST_SetSRID(ST_Point(lon, lat), 27700);
-      
-    * reading from hex code (hex is the typical postgis output)
-      * UPDATE ucl.road_data SET geom = ST_GeomFROMEWKB(geom_text::geometry) 
-      
-    * create index
-      * CREATE INDEX road_data_gix ON ucl.road_data USING GIST (geom);
-      
-    * add id column for qgis (if not present Qgis will not allow updates to the table)
-      * ALTER TABLE table1 ADD PRIMARY KEY (id);
 
-  * openstreetmap
-    * loading openstreetmap to postgis database (writes to gis database by default).
-      * osm2pgsql -C 27000 Documents/british-isles-latest.osm.pbf 
-    
-    * loading openstreetmap to pgrouting
-      * osm2pgrouting --f "P:\somewhere\latest.osm_01.osm" --clean --dbname gis --username carlos --schema osm_routing --conf "C:\somewhere\mapconfig.xml"
+## setting
 
+```
+psql -d gis -c "CREATE EXTENSION postgis;"
+psql -d gis -c "CREATE EXTENSION postgis_topology;"
+psql -d gis -c "CREATE EXTENSION postgis_sfcgal;"
+```
+
+## spatial column
+
+add during table creation
+
+`CREATE TABLE schema.table (id serial primary key, geom geometry('POLYGON', 27700));`
+
+add column to table
+
+`SELECT AddGeometryColumn ('ucl','road_data','geom',27700,'POINT',2);`
+
+update from lat and lon columns
+
+`UPDATE ucl.road_data SET geom = ST_SetSRID(ST_Point(lon, lat), 27700);`
+      
+reading from hex code (hex is the typical postgis output)
+
+`UPDATE ucl.road_data SET geom = ST_GeomFROMEWKB(geom_text::geometry);`
+      
+create index
+
+`CREATE INDEX road_data_gix ON ucl.road_data USING GIST (geom);`
+      
+## openstreetmap
+
+loading openstreetmap to postgis database (writes to gis database by default).
+
+`osm2pgsql -C 27000 Documents/british-isles-latest.osm.pbf`
+    
+loading openstreetmap to pgrouting
+
+`osm2pgrouting --f "P:\somewhere\latest.osm_01.osm" --clean --dbname gis --username carlos --schema osm_routing --conf "C:\somewhere\mapconfig.xml"`
      
 # SQL/PSQL
 * alter table
