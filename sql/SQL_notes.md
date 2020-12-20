@@ -92,6 +92,10 @@ when connecting to postgis, leave empty the field host if the connection is loca
 add id column for qgis (if not present Qgis will not allow updates to the table)
 
 `ALTER TABLE table1 ADD PRIMARY KEY (id);`
+
+For materialised views, create and unique index:
+
+`CREATE UNIQUE INDEX table_idx ON schema.view (id);
   
 ## Pgadmin4
 
@@ -266,23 +270,3 @@ loading openstreetmap to pgrouting
 * values
 
   * SELECT * FROM (VALUES (a,b,c), (1,2,3)) AS A;
-
-# PL/pgPSQL
-
-## triggers
-### trigger function
-```sql
-CREATE OR REPLACE FUNCTION myfunction() RETURNS trigger AS $$
-BEGIN
-  NEW.col1 = val1;
-  NEW.col2 = (SELECT val2 FROM table 2);
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-```
-### create trigger
-```sql
-CREATE TRIGGER myfunction
-BEFORE INSERT OR UPDATE ON schema1.table1
-FOR EACH ROW EXECUTE PROCEDURE myfunction(); 
-```
