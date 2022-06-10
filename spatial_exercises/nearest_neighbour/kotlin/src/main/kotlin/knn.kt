@@ -37,9 +37,9 @@ class DbManager(
 fun nearestNeighbour(geoma: Map<String, Geometry>, geomb: Map<String, Geometry>): Map<String, Pair<String?, Double>> {
     //for each geometry a get entry of b with the lowest distance, then compute dist to save map
     val dist: Map<String, Pair<String?, Double>> = geoma.map {
-            a -> a to geomb.minByOrNull{
-                b -> a.value.distance(b.value)}}.toMap().map{ //so far is of the form (id_a, geom_a) to (id_b, geom_b)
-                    c -> c.key.key to (c.value?.key to c.key.value.distance(c.value?.value))  //moving to form id_a to pair(id_b, dist)
+            a ->
+                val knn = geomb.minByOrNull{b -> a.value.distance(b.value)}
+                a.key to (knn?.key to a.value.distance(knn?.value))
     }.toMap().toSortedMap()
     return dist
 }
@@ -50,12 +50,13 @@ fun nearestNeighbour2(geoma: Map<String, Geometry>, geomb: Map<String, Geometry>
         t.insert(it.value.envelopeInternal, it.value)
     }
     t.build()
-    val dist = geoma.map {
-            a -> a to t.nearestNeighbour(a.value.envelopeInternal, a.value, GeometryItemDistance()) //so far is of the form (id_a, geom_a) to geom_b
-        }.toMap().map { a -> a.key to geomb.filterValues { b -> b == a.value} //so far is of the form (id_a, geom_a) to (id_b, geom_b)
-        }.toMap().map { a -> a.key.key to (a.value.keys.first() to a.key.value.distance(a.value.values.first()))
-        }.toMap().toSortedMap()
 
+    val dist = geoma.map {
+            a ->
+                val knnGeom = t.nearestNeighbour(a.value.envelopeInternal, a.value, GeometryItemDistance())
+                val knnObj = geomb.filterValues { b -> b == knnGeom}
+                a.key to (knnObj.keys.first() to a.value.distance(knnObj.values.first()))
+    }.toMap().toSortedMap()
     return dist
 }
 
