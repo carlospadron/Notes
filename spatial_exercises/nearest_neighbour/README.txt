@@ -14,5 +14,6 @@ Pygeos, smallest distance in an array: 1min 24s
 SQL distinct: 4min 15s
 Shapely, smallest distance in an array: 7min 5 s
 Shapely STRtree: 19min 23s (perhaps I'm doing something wrong, it is too slow)
+pyspark: 1h 50m (perhaps I'm doing something wrong, it is too slow)
 
 
