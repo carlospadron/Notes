@@ -7,6 +7,7 @@ Results:
 SKLearn: 1.37s (only works for points)
 Pygeos, STRTree: 2.08 s
 JTS, STRTree: 3.6s
+Rust, smallest distance in an array (optimised): 5s 
 JTS, smallest distance in an array: 22s
 SQL lateral: 50.1s
 Pygeos, smallest distance in an array: 1min 24s
