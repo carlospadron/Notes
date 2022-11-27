@@ -3,6 +3,7 @@
 
 * READ https://fedoraproject.org/wiki/PostgreSQL for Fedora
 * READ https://wiki.debian.org/PostgreSql for Debian
+* READ https://ubuntu.com/server/docs/databases-postgresql for Ubuntu
 
 ### create cluster (not required for debian) 
 
@@ -52,6 +53,8 @@ create db
 
 Sometimes unix socket is not /tmp/ but /var/run/postgresql/. 
 Run createsb with postgres user and connect to the database using /var/run/postgresql/ as host.
+
+psql -h /var/run/postgresql -d your_database
 
 ### configuration files
 
@@ -196,9 +199,9 @@ loading openstreetmap to pgrouting
     
 * copy
   * standard
-    * COPY table to 'test.csv' WIT CSV HEADER;
+    * COPY table to 'test.csv' WITH CSV HEADER;
   * for non-superuser
-    * \COPY table to 'test.csv' WIT CSV HEADER;
+    * \COPY table to 'test.csv' WITH CSV HEADER;
   * with psql
     * psql gis -c "COPY schema.table FROM 'test.csv' DELIMITER ',' CSV HEADER"  
     
