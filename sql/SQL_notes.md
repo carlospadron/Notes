@@ -199,9 +199,9 @@ loading openstreetmap to pgrouting
     
 * copy
   * standard
-    * COPY table to 'test.csv' WIT CSV HEADER;
+    * COPY table to 'test.csv' WITH CSV HEADER;
   * for non-superuser
-    * \COPY table to 'test.csv' WIT CSV HEADER;
+    * \COPY table to 'test.csv' WITH CSV HEADER;
   * with psql
     * psql gis -c "COPY schema.table FROM 'test.csv' DELIMITER ',' CSV HEADER"  
     
