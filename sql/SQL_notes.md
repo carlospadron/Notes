@@ -3,6 +3,7 @@
 
 * READ https://fedoraproject.org/wiki/PostgreSQL for Fedora
 * READ https://wiki.debian.org/PostgreSql for Debian
+* READ https://ubuntu.com/server/docs/databases-postgresql for Ubuntu
 
 ### create cluster (not required for debian) 
 
