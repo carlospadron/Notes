@@ -53,6 +53,8 @@ create db
 Sometimes unix socket is not /tmp/ but /var/run/postgresql/. 
 Run createsb with postgres user and connect to the database using /var/run/postgresql/ as host.
 
+psql -h /var/run/postgresql -d your_database
+
 ### configuration files
 
 configure server (fedora)
