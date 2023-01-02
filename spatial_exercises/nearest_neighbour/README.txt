@@ -4,16 +4,19 @@ The exercise is that for 82461 uprns, find the closest 0f 4121 geometries
 
 Results:
 
-SKLearn: 1.37s (only works for points)
-Pygeos, STRTree: 2.08 s
-JTS, STRTree: 3.6s
-Rust, smallest distance in an array (optimised): 5s 
-JTS, smallest distance in an array: 22s
-SQL lateral: 50.1s
-Pygeos, smallest distance in an array: 1min 24s
-SQL distinct: 4min 15s
-Shapely, smallest distance in an array: 7min 5 s
-Shapely STRtree: 19min 23s (perhaps I'm doing something wrong, it is too slow)
-pyspark: 1h 50m (perhaps I'm doing something wrong, it is too slow)
-
+test						time					multiple equally distant results	able to sort equally distant
+Sklearn nearest neighbour	0 days 00:00:00.142799	False								False
+Geopandas sjoin_nearest		0 days 00:00:01.074799	True								True
+Pygeos strtree				0 days 00:00:02.376158	False								False
+JTS, STRTree				0 days 00:00:03.6       False								False
+Rust (opti), all vs all		0 days 00:00:05			False								True
+Shapely strtree				0 days 00:00:07.610000	False								False
+JST, all vs all				0 days 00:00:22			False								True
+SQL lateral 16GB			0 days 00:00:51			False								True
+SQL lateral 2GB				0 days 00:00:51			False								True
+Pygeos all vs all			0 days 00:01:25.121942	False								True
+SQL distinct 16GB			0 days 00:02:57.778057	False								True
+SQL distinct 2GB			0 days 00:03:08			False								True
+Shapely all vs all			0 days 00:06:42.439090	False								True
+pyspark sql					0 days 00:09:29			False								True
 
