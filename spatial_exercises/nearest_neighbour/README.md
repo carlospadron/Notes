@@ -19,4 +19,4 @@ Results:
 |SQL distinct 16GB			   |0 days 00:02:57.778057	|False								             |True
 |SQL distinct 2GB			     |0 days 00:03:08			    |False								             |True
 |Shapely all vs all			   |0 days 00:06:42.439090	|False								             |True
-|pyspark sql					     |0 days 00:09:29			    |False								             |True
+|pyspark sql					     |0 days 00:09:29			    |False								             |True	

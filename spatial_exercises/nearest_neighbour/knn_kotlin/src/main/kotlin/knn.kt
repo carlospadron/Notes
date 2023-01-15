@@ -1,9 +1,10 @@
-import java.sql.DriverManager
-import java.sql.SQLException
-import org.locationtech.jts.io.WKTReader
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.index.strtree.GeometryItemDistance
 import org.locationtech.jts.index.strtree.STRtree
+import org.locationtech.jts.io.WKTReader
+import java.io.File
+import java.sql.DriverManager
+import java.sql.SQLException
 
 
 class DbManager(
@@ -60,8 +61,21 @@ fun nearestNeighbour2(geoma: Map<String, Geometry>, geomb: Map<String, Geometry>
     return dist
 }
 
+fun saveCsv(table: Map<String, Pair<String?, Double>>, name: String) {
+    val writer = File("$name").bufferedWriter()
+    writer.write("""origin,destination,distance""")
+    writer.newLine()
+    table.forEach {
+        writer.write("${it.key}, ${it.value.first}, ${it.value.second}")
+        writer.newLine()
+    }
+    writer.flush()
+}
+
 fun main() {
+    println("db user")
     val user = readln()
+    println("bd password")
     val pass = readln()
 
     val db = DbManager(user, pass, "localhost", "gis")
@@ -74,11 +88,13 @@ fun main() {
     val startTime = System.currentTimeMillis()
     val out1 = nearestNeighbour(uprn, codepoint) //22sec
     val endTime = System.currentTimeMillis()
+    saveCsv(out1, "kotlin_all_vs_all.csv")
 
     println(startTime - endTime)
     val startTime2 = System.currentTimeMillis()
     val out2 = nearestNeighbour2(uprn, codepoint) //3.6sec
     val endTime2 = System.currentTimeMillis()
+    saveCsv(out2, "kotlin_tree.csv")
 
     println(startTime2 - endTime2)
 }
