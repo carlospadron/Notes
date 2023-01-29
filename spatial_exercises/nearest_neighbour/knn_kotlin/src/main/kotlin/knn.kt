@@ -66,7 +66,7 @@ fun saveCsv(table: Map<String, Pair<String?, Double>>, name: String) {
     writer.write("""origin,destination,distance""")
     writer.newLine()
     table.forEach {
-        writer.write("${it.key}, ${it.value.first}, ${it.value.second}")
+        writer.write("""${it.key}, "${it.value.first}", ${it.value.second}""")
         writer.newLine()
     }
     writer.flush()
