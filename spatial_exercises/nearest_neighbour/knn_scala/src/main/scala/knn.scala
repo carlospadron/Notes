@@ -38,7 +38,7 @@ def nearestNeighbour(geoma: Map[String, Geometry], geomb: Map[String, Geometry])
   geoma
     .map(
       x =>
-        val knn = geomb.minBy(b => x._2.distance(b._2))
+        val knn = geomb.minBy(b => (x._2.distance(b._2), b._1))
         (x._1 , knn._1, x._2.distance(knn._2))
     )
     .toList
@@ -53,9 +53,10 @@ def nearestNeighbour2(geoma: Map[String, Geometry], geomb: Map[String, Geometry]
 
   geoma.map (
     x =>
-      val knnGeom = t.nearestNeighbour(x._2.getEnvelopeInternal, x._2, GeometryItemDistance()).asInstanceOf[Geometry]
-      val knnObj = geomb2(knnGeom)
-      (x._1, knnObj, x._2.distance(knnGeom))
+      val knnGeom = t.nearestNeighbour(x._2.getEnvelopeInternal, x._2, GeometryItemDistance(), 100).toList.asInstanceOf[List[Geometry]]
+      val knn = knnGeom.map(y => (geomb2(y), x._2.distance(y))).minBy((x,y) => (y, x))
+
+      (x._1, knn._1, knn._2)
     )
     .toList
 

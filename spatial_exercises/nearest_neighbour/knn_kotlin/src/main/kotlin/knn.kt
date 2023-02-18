@@ -39,9 +39,9 @@ fun nearestNeighbour(geoma: Map<String, Geometry>, geomb: Map<String, Geometry>)
     //for each geometry a get entry of b with the lowest distance, then compute dist to save map
     val dist: Map<String, Pair<String?, Double>> = geoma.map {
             a ->
-                val knn = geomb.minByOrNull{b -> a.value.distance(b.value)}
+                val knn = geomb.minWithOrNull(compareBy({ b -> a.value.distance(b.value)},{ b -> b.key}))
                 a.key to (knn?.key to a.value.distance(knn?.value))
-    }.toMap().toSortedMap()
+    }.toMap()
     return dist
 }
 
@@ -51,13 +51,16 @@ fun nearestNeighbour2(geoma: Map<String, Geometry>, geomb: Map<String, Geometry>
         t.insert(it.value.envelopeInternal, it.value)
     }
     t.build()
+    val geomb2 = geomb.map{ x -> x.value to x.key}.toMap()
 
     val dist = geoma.map {
             a ->
-                val knnGeom = t.nearestNeighbour(a.value.envelopeInternal, a.value, GeometryItemDistance())
-                val knnObj = geomb.filterValues { b -> b == knnGeom}
-                a.key to (knnObj.keys.first() to a.value.distance(knnObj.values.first()))
-    }.toMap().toSortedMap()
+                val knnGeom = t.nearestNeighbour(a.value.envelopeInternal, a.value, GeometryItemDistance(), 100).toList() as List<Geometry>
+                val knn = knnGeom.associate { y -> geomb2[y] to a.value.distance(y) }
+                    .minWithOrNull(compareBy({ b -> b.value },{ b -> b.key}))
+                a.key to (knn?.key to knn?.value)
+    }.toMap() as Map<String, Pair<String?, Double>>
+
     return dist
 }
 
