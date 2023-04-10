@@ -5,6 +5,9 @@ use geo::{Point, LineString};
 use geo::EuclideanDistance;
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
+use std::error::Error;
+use csv::Writer;
+use rstar::RTree;
 
 fn db_manager(
     user: &String, 
@@ -32,57 +35,63 @@ fn db_manager(
     geom
 }
 
-fn nearest_neighbour(geoma: HashMap<String, Point>, geomb: HashMap<String, Point>) -> HashMap<i64, (String, f64)>
+fn nearest_neighbour(geoma: &HashMap<String, Point>, geomb: &HashMap<String, Point>) -> HashMap<String, (String, f64)>
 {
-    let geoma: HashMap<i64, Point> = geoma.into_iter().map(
-        |(a,b)| (a.parse().unwrap(), b)
-    ).collect();
-
-    let mut output = HashMap::new();
-    for (a, b) in geoma.iter() {
-        let mut min = f64::INFINITY;
-        let mut i = String::new();
-
-        for (c, d) in geomb.iter() {
-            let dist = b.euclidean_distance(d);
-            if dist < min {
-                min = dist;
-                i = c.clone();
-            }
+    geoma.iter().map(
+        |(uprn, point1)| {
+            let min = geomb.iter().min_by(
+                |(postcode, point2), (postcode2, point22)| {
+                    let dista = point1.euclidean_distance(point2.clone());
+                    let distb = point1.euclidean_distance(point22.clone());
+                    (dista, postcode).partial_cmp(&(distb, &postcode2)).unwrap()
+                }).unwrap();
+            (uprn.clone(), (min.0.clone(), point1.euclidean_distance(min.1)))
         }
-        output.insert(a.clone(), (i, min));
-    }
-    output
-    
+    ).collect()
 }
-fn nearest_neighbour2(geoma: HashMap<String, Point>, geomb: HashMap<String, Point>) //-> HashMap<i64, (String, f64)>
+fn nearest_neighbour2(geoma: &HashMap<String, Point>, geomb: &HashMap<String, Point>) -> HashMap<String, (String, f64)>
 {
-    let geoma: HashMap<i64, LineString<f64>> = geoma.into_iter().map(
-        |(a,b)| (a.parse().unwrap(), vec![b.x_y(), b.x_y()].into())
-    ).collect();
+    let geomb2 = geomb.clone();
+    let tree_a: RTree<Point<_>> = RTree::bulk_load(geomb2.into_values().collect::<Vec<_>>());
+    geoma.iter().map(
+        |(uprn, point)| {
+            let nearest = tree_a.nearest_neighbors(&point);
+            let postcodes: Vec<(&String)> = nearest.iter().map(
+                |point2|
+                    geomb
+                        .iter()
+                        .find(|(s, p)| p==point2)
+                        .unwrap()
+                        .0
+            ).collect();
 
-/*    let mut output = HashMap::new();
-    for (a, b) in geoma.iter() {
-        let mut min = f64::INFINITY;
-        let mut i = String::new();
-
-        for (c, d) in geomb.iter() {
-            let dist = b.euclidean_distance(d);
-            if dist < min {
-                min = dist;
-                i = c.clone();
-            }
+            let postcode = postcodes.iter().min().unwrap().clone();
+            (uprn.clone(), (postcode.clone(), point.euclidean_distance(geomb.get(postcode).unwrap())))
         }
-        output.insert(a.clone(), (i, min));
-    }
-    output
-*/
+    ).collect()
 }
+
+fn writeCsv(output: HashMap<String, (String, f64)>, path: String) -> Result<(), Box<dyn Error>> {
+    let mut wtr = Writer::from_path(path)?;
+
+    wtr.write_record(&["origin", "destination", "distance"])?;
+    output.iter().for_each(
+        |(uprn, (postcode, distance))| {
+            wtr.write_record(&[uprn.to_string(), postcode.to_string(), distance.to_string()]).unwrap();
+        }
+    );
+
+    wtr.flush()?;
+    Ok(())
+}
+
 fn main() {
     let mut user = String::new();
     let mut password = String::new();
 
+    println!("user");
     io::stdin().read_line(&mut user).unwrap();
+    println!("password");
     io::stdin().read_line(&mut password).unwrap();
 
     let host = "localhost";
@@ -93,12 +102,14 @@ fn main() {
     let codepoint = db_manager(&user, &password, &host, &db, &sql);    
 
     let start = Instant::now();
-    let output = nearest_neighbour(uprn.clone(), codepoint.clone());
+    let output = nearest_neighbour(&uprn, &codepoint);
     let duration = start.elapsed();
-    //println!("{:?}", output);
+    writeCsv(output, "rust_all_vs_all.csv".to_owned());
     println!("Time elapsed is: {:?}", duration);
+
     let start = Instant::now();
-    let output = nearest_neighbour2(uprn.clone(), codepoint.clone());
+    let output = nearest_neighbour2(&uprn, &codepoint);
     let duration = start.elapsed();
+    writeCsv(output, "rust_tree.csv".to_owned());
     println!("Time elapsed is: {:?}", duration);
 }
