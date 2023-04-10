@@ -1,11 +1,9 @@
 import org.locationtech.jts.geom.Geometry
-import org.locationtech.jts.index.strtree.GeometryItemDistance
-import org.locationtech.jts.index.strtree.STRtree
+import org.locationtech.jts.index.strtree.{GeometryItemDistance, STRtree}
 import org.locationtech.jts.io.WKTReader
 
-import java.io.{File, FileWriter, BufferedWriter}
-import java.sql.DriverManager
-import java.sql.SQLException
+import java.io.{BufferedWriter, File, FileWriter}
+import java.sql.{DriverManager, SQLException}
 import scala.collection.immutable.HashMap
 import scala.io.StdIn.readLine
 class DbManager(
