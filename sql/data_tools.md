@@ -1,0 +1,16 @@
+- databases
+    - postgresql: spatially enabled
+- data warehouses
+    - snowflake: very well integrated, very easy to use, spatially enabled
+    - google big query: very fast, very easy to use, spatially enabled (only geography)
+    - databricks: more complex, very capable
+- etl 
+    - airbyte
+- orchestration
+    - argocd workflow
+    - apache airflow
+- data models 
+    - dbt
+- streaming
+    - kafka
+    - apache flink            
