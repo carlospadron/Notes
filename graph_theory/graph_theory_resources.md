@@ -1,0 +1,20 @@
+- Python
+    - Networkx
+    - Igraph
+    - Graph-tools
+    - Networkit
+    - Scikit network
+- Spark
+    - Graphframes
+- Java
+    - Jgrapht
+- Languages
+    - Sparql
+    - Gremlin
+    - Aql
+    - GQL
+- Databases
+    - Arangodb
+    - Janusgraph
+- Routing engines
+    - Graphhopper
