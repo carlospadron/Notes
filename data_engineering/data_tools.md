@@ -1,9 +1,12 @@
-- databases
+- databases: designed for fast transactions
     - postgresql: spatially enabled
-- data warehouses
+- data warehouses: designed for analytical, heavy queries (more memory, distributed queries, no fast transactions)
     - snowflake: very well integrated, very easy to use, spatially enabled
     - google big query: very fast, very easy to use, spatially enabled (only geography)
     - databricks: more complex, very capable
+- nosql: designed for scalabilty and flexibility
+    - mongodb
+    - dynamodb
 - etl 
     - airbyte
 - orchestration
