@@ -1,0 +1,15 @@
+kmymoney
+geany
+python3-pandas
+python3-geopandas
+python3-psycopg
+python3-sklearn
+python3-geoalchemy2
+python3-libpysal
+python3-networkx
+python3-plotly
+python3-statsmodels
+python3-fiona
+python3-pip
+postgis
+pipenv
