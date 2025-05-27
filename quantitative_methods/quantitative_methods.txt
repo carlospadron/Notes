@@ -1,0 +1,239 @@
+Basic for any research
+	state the research question clearly
+	state your assumptions
+	state what you know
+	state what you don't know but need to know
+	estimate, calculate or research (state the method clearly)
+	verify if the answer is sensible
+	reference properly
+Relationships
+	linear
+	power law (linear, superlinear o sublinear) (there are many already 
+	defined laws as kleiber's law)
+Logarithms
+	base^x=result
+	Log base result=x
+	Log base result=Ln result / Ln base
+	result=base*rate^years (rate formated as 1.0)
+Ln vs Ln plot
+	all linear, sublinear o superlinear relationship must look linear in
+	a Ln vs Ln plot (remember to adjust scale closer to zero)
+Definitions (just tips)
+	Variance: average of squared distances from mean 
+	Covariance: measure how two variables variate together. the bigger the more
+		correlated. negative or positive indicate inclination. Like variance but 
+		in two dimensions.
+	Standard deviation: root of variance
+	p value: unlikeliness of relation arising from noise. Probability of
+		observing something as extreme or more. has to be smaller than alpha.
+		(usually a product of T-test or F-test to check if gradient is 
+		significantly different from 0).
+	alpha: significance level
+Linear Regressions
+    can be simple or multiple (it is important to specify).
+    Possible with multiple variables (even ranks and categories if transformed to 1-0).
+	r square or coefficient of determination: It measures how good a line fits
+		a sample. 1 is better. 
+	p value: unlikeliness of relation arising from noise. Probability of
+		observing something as extreme or more. has to be smaller than alpha.
+		(usually a product of T-test or F-test to check if gradient is 
+		significantly different from 0).
+	alpha: significance level
+	mse: sum of squared errors. Good fitting regressions should have small errors.
+	pearson correlation: measures correlation. 1 means it is more correlated.
+	spearman rank correlation: measures strength of a monotonic 
+		relationship between paired data. correlation for ranks. It is more robust. 
+		It can deal with non linear relationships but they need to be monotonic.
+		Basically a pearson correlation on ranked data
+    Pearson Requirements:
+		-dependend variable has linear relationship with independent (scatter plot)
+		-the standard deviation of y shouldn't variate accross y (random residuals plot)
+		-y should show a normal distribution across x (histogram, boxplot or skewness 
+			bigger than 1 or less than -1)
+		-data like interval or ratio level 
+	Spearman Requirements:
+		-dependend variable has linear relationship with independent (scatter plot)
+		-the standard deviation of y shouldn't variate accross y (random residuals plot)
+		-no need for a normal distribution
+		-data like interval or ratio level or ordinal (no need to rank 
+		the data previously in r)
+	Steps
+		-check requirements
+		-stablish formula
+		-check pearson or spearman correlation (r square where 1 is 100% rel
+			, p value and mse)
+		-plot least squares regression line
+		-cross-validate if needed (advanced)
+	Tecniques
+		Linear
+		Lasso, Ridge and Elastic Net
+		Support Vector
+		Regression Trees
+	Testing
+		Mean Absolute Error (MAE)
+		Mean Squared Error
+		R2 Score
+
+Distributions
+	kleiber's law: energy use scales at 3/4 of mass
+	Bendford's law for leading numbers: in most natural phenomena, the 
+		frequency of the leading number decreases with the increase of the leading
+		number.
+	Normal: defined by mean and standard deviation.
+	Central limit theorem: the mean or sum of a large sample will always be
+		normally distributed no matter how the samples are distributed.
+	Log normal distribution: similar to normal but skew depending of the 
+		standard deviation
+	Zipf's law: phenomena is more frequent when rank is higher (the effect is more
+		clear in higher ranks. The correlations is smaller in lower ranks. coherence
+		in the entire dataset is necessary, random sampling doesn't lead to zipf's)
+	Poisson distribution: good for predicting phenomena in a period of time or space.
+		you need to know lambda
+	
+	Every distribution have a probability density function and cumulative density function.
+Hypothesis testing
+	basically we check the probability of seeing a phenomena like the data or more extreme
+	if null hypothesis is true. If p is smaller than alpha means the probability
+	is too small and we have to reject the null hypothesis.
+	Can be used to check linear regressions.
+	Generic Types:
+		lower-tailed
+		upper-tailed
+		two-tailed
+	t-test (usually two sided)
+		independent or paired samples
+		checks if the means of the two samples are significantly different
+		steps
+			check normality (histogram or ks-test)
+			check variance is similar (f-test)
+			perform t-test
+	ks-test
+		compares the distance betwee the samples empiric distribution and
+		a reference distribution or another sample empiric distribution.
+		checks if both distributions are significantly differents.
+		more sensitive than t-test because it looks to mean and shape.
+		However, if normality is present, t-test is more sensible.
+		KS-test could be used to check normality and then a t-test for mean. 
+	Fisher test
+		checks than proportion is equal in both samples or checks independence
+		of the variables.
+		more suited for small samples than chi-square
+Expected value and utility functions
+	Calculates the expected value at long term of a phenomena
+	expected value=rewards*probability of winning - loses*probability of losing
+	marginal utility: an extra unit gives less than the previous
+	discount parameter: discount per time
+Simpson paradox
+	the statistics of a group might be opposed to the statistics of the sub-groups
+	Pay attention to sub-groups.
+Optimisation
+	linear programming
+Regression to the mean (number go up and down, obtainers of high values might 
+	return to the mean in next measurements)
+Standardrisation
+	standardrised data=data-mean/std
+	allows comparison of two normally distributed samples with different units
+Stochastic Optimisation
+	simple-hill climbing
+	steepest ascent hill-climbing
+	simulated annealing
+Clustering (see scikit )
+	k-means 
+		requires knowing the ammount of clusters
+		sensitive to initial settings and outliers
+		incapable of handling clusters convex-shaped
+		inaplicable to categorical data
+	Silhouette analysis
+	hierarchichal clustering
+		divisive
+		agglomerative
+	DBSCAN (favorite)
+    Affinity Propagation
+    Gaussian Mixture Models
+    
+    Testing
+	    Silhouette Score
+	    homogeneity
+	    completeness
+classification (see scikit) (predicts labels, predictors are for values)
+	-Nearest Neighbours
+	-Naïve Bayes
+	-Artificial Neural Networks
+	-Support Vector Machines
+	-Decision Trees
+	-Random Forests
+	Testing
+		Classification Accuracy
+		Precision
+		Recall
+		F1
+
+Models
+	-real world question
+	-mathematical representation
+	-check model with reality and adjust (verificate model)
+	-answer your question
+	-check question (validate answer)
+	
+	types (by detail)
+		facsimile (very specific)
+		middle range (more generic)
+		abstract
+	types (by design)
+		system dynamic models 
+		-based on mathetical functions
+		-more simple
+		-less computational intense
+		-examples
+			SIR
+			Lokta-Volterra
+		agent-based models (read the odd protocol)
+		-based on agent rules
+		-can produce emergent behaviours
+		-more computational intense
+		-examples
+			cellular automaton (game of life)
+Text mining
+	-Processing Text
+	-Keyword Extraction
+	-Latent Dirichlet Allocation
+	-Sentiment Detection
+	-Language Detection
+Image Processing
+	-Object Recognition
+	-Face and Feature Detection
+
+Analysis Workflow
+	Collect Data
+	Clean and Prepare Data
+		nulls
+		duplicates
+		wrong data type
+	Analyse Input Data
+	select algorithm
+	Train Algorithm
+	Test Algorithm
+	Use Algorithm
+	
+	-Pre-Processing Data
+		-Dimensionality Reduction 
+			Principle Component Analysis (PCA)
+		-Standardisation
+			Range Scaling / Normalisation
+			Z-Score Scaling
+			one Hot Encoding
+	-Model Refinement
+		-Validation Measures (see testing/validation above)
+		-Cross Validation
+			K-Fold Cross Validation
+		-Hyperparameter Optimisation
+			Grid Search 
+			Bayesian Optimisation
+			Random search
+		
+		
+			
+		
+	
+
+
