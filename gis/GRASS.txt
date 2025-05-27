@@ -1,0 +1,204 @@
+INDICE
+
+Ruta para conectar a base de datos
+	sqlite o dbf
+		$GISDBASE/$LOCATION_NAME/$MAPSET/dbf/ 
+	
+Estadísticas (revisado 16.05.2013)
+	área de cada categoria de un mapa raster
+		sin límites
+			r.report o r.stats (solo aplica a la region)
+				
+		con límites
+			rasterizar limites
+			llamar ambos mapas con r.report o r.stats(solo aplica a la region)
+
+	rango de valores de un mapa raster
+			r.describe (solo aplica a la region)
+
+Exportar/importar datasets (revisado 11.04.2013)
+	Exportar mapa raster con mapa de colores (util para mapinfo, mapserver y autocad)
+		r.out.tiff (incluye .prj)
+		r.out.png (no incluye georeferencia pero si un .wld)
+
+	importar gpx o garmin
+		usar gpsbabel (v.in.gpsbabel)
+			formatos
+				GPS=garmin
+				GPX=gpx
+			device
+				GPS= /dev/ttyUSB0 (verificar con dmesg)
+				GPX= archivo
+
+Medio físico (geología, geomorfología, hidrografía, vegetación etc) (revisado 11.04.2013)
+	Estabilidad de taludes
+		QGIS-GRASS
+			Crear SHP y digitalizar poligonos (sinclinales y anticlinares)
+			Asignar a SHP los buzamientos promedio de los poligonos
+			Generar ASPECT
+			Cargar aspect a GRASS
+				r.reclass (45 cada segmento en sentido horario empezando con el valor 1)
+					0 thru 45 = 1 0-45
+					45 thru 90 = 2 45-90
+					90 thru 135 = 3 90-135
+					135 thru 180 = 4 135-180
+					180 thru 215 = 5 180-215
+					215 thru 260 = 6 215-260
+					260 thru 305 = 7 260-305
+					305 thru 360 = 8 305-360
+				vectorizar y exportar a QGIS (limite 1000 categorias)
+			intersectar aspect reclasificado y buzamientos promedio
+			Actualizar tabla del producto combinado
+
+	Hipsometria
+		r.mapcalc 'hipsometria=(50*(int(dem_bid/50)))' (extrae intervalos con valores enteros) (ver r.mapcalc para otros ejemplos)
+
+	Pendientes
+		generar superficie
+		generar mapa de pendiente
+		r.slope.aspect (terrain analisis)
+		reclasificar grupos de pendientes
+			r.reclass
+		definir colores
+			r.colors
+
+	Quebradas
+		Generar mapa de acumulación
+		Calcular log(abs(acumulación))>6 ó más
+
+Raster
+	Extraer valores de mapas raster
+		(ver r.mapcalc para otros ejemplos)
+		r.mapcalc 'mapa= if(mapa2>=x)' extrae area de valor especifico (las celdas de mapa son iguales a 1 por default) 
+		r.mapcalc 'mapa= if(mapa2>=xmenor && mapa2<=xmayor)' extrae area con rango de valores (las celdas de mapa son iguales a 1 por default)
+
+	Fusionar canales RGB (composicion)
+		r.composite
+
+	Mapas temáticos con relieve (composition mode)
+		Usar Hue del mapa temático
+		Usar Intensity o brightness de un mapa de relieve sombreado
+
+		QGIS-GRASS
+			asignar mapa de colores y exportar 
+			Aplicar con el plugin one band raster to paletted
+			Importar a Grass
+			Fusionar mapa tematico r.composite
+			r.his hue=mapa_tematico intensidad=cualquier_banda_sombreado
+			exportar
+
+	r.mapcalc
+		Ejemplos
+			r.mapcalc 'hipsometria=(50*(int(dem_bid/50)))' (ver hipsometria)
+			r.mapcalc 'mascara= if(distancia>=6)' (ver extraer valores desde un raster)
+			r.mapcalc 'herbc=if(vegetacion.red>=189 && vegetacion.red<=206)' (ver extraer valores desde un raster)
+
+	Superficies (revisado 11.04.2013)
+		para superficies rapidas usar QGIS (TIN)
+		para mas detalladas descargas dem (resolucion hasta 30 m) sino usar GRASS (v.sur.bspline)
+
+		
+		Eliminar
+			Elevaciones atípicas
+			polilineas aglomeradas en puntos
+
+		Definir mascara y región
+			r.mask, g.region
+
+		Producir superficie
+			v.surf.bspline f
+				pasar a puntos con v.to.points (punto cada metro)
+				generar mapa de densidad de puntos (v.kernel con desviacion estandar = 1000), donde mapa sea 0 se requiere más puntos
+				tipo bicubic
+				multiplicar step (4 por default) por res (si es 1 metro queda 4 si es 100 metros queda 400)
+				Si se tienen puntos y curvas (¿candidato para script?)
+					crear columna Z de mismo tipo en ambas capas y poblar
+					borrar demás columnas
+					fusionar con v.patch
+				para mejor resolucion usar lambda i=0.2
+				
+			v.sur.idw NO USAR (genera escalones)
+
+			r.surf.idw NO USAR (rapido y no muy satisfactorio)
+
+			v.surf.rst NO USAR (terriblemente LENTO)
+				ver parámetro más óptimo en surf_performance
+				usar columna de elevación
+				Si se tienen puntos y curvas (¿candidato para script?)
+					crear columna Z de mismo tipo en ambas capas y poblar
+					borrar demás columnas
+					fusionar con v.patch
+				Si la superficie es para relieves sombreados y no mapas de pendientes, usar smooth 8
+		  
+			r.surf.countour NO USAR (LENTO para areas grandes, genera superficies asperas y requiere curvas cerradas)
+				rasterizar curvas y puntos con las alturas como atributos
+				unir capas con r.patch
+
+		Verificar errores
+			obtener curvatura minima
+			exagerar valores mínimos log(abs(min))
+			Corregir vectores en modo no interactivo (evita el uso excesivo de memoria al abrir el modo edición)
+	
+	Getting a distance map from all pixels to target pixels
+		R.GROW.DISTANCE
+		
+Sistemas de coordenadas
+	Reproyecciones
+		Raster
+			generar marco region con v.in.region
+			reproyectar marco con v.proj
+			ajustar region a cuadro con g.region
+			reproyectar raster con cropping optimization con r.proj
+
+	Transformaciones
+		v.transform
+		
+Vectores
+	Digitalizar geometrias vectoriales 
+			Verificar que la imagen esté georeferenciado (si se usa una imagen o raster como referencia)
+			Iniciar modo de edición
+			NUNCA INGRESAR ELEMENTOS CON CATEGORIAS YA EXISTENTES 
+			Al finalizar validar geometrias y simplificar si se desea (tener cuidado con la topologia general pues puede perderse en caso de poligonos)
+
+	Editar vectores 
+		Ver Digitalizar vectores
+
+	Fusionar mapas vectoriales
+		Poseen identica estructura de tablas o carecen de tablas
+			v.patch
+		Poseen estructura de tablas diferentes y ambos contienen solo áreas
+			v.overlay con la opción OR
+		Poseen estructura de tablas diferentes pero ambos no son unicamente áreas
+			v.edit copy con background
+
+	Intersectar poligonos
+		más de 4453 poligonos
+			rasterizar ambas capas
+			intersectar con r.cross
+			vectorizar
+			adjuntar tablas originales
+
+	Validar y corregir geometrias
+		Corregir vectores en modo no interactivo (evita el uso excesivo de memoria al abrir el modo edición)
+
+###########
+Por organizar
+###########
+
+
+
+  
+Procedimiento					Grass
+------------------------------------
+Raster
+	Cuencas					r.watershed
+	Extraer seccion				r.mask + r.mapcalc (A=B)
+	Mapa de colores				r.colors
+	RGB to HIS				r.his
+	Superficies				v.surf.rst
+	Superponer				r.cross
+
+Vectorial
+	Disolver				v.dissolve (solo para columns numéricas)
+	Importar desde GPS			herramientas GPS (/dev/TTYUSB0)
+	Indice espacial				r.out.ogr (tipo mapserver)

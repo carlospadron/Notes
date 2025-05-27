@@ -1,0 +1,194 @@
+
+Codificación
+	utf-8
+	iso-8859-10 suecia
+Exportar/importar datasets (revisado 11.04.2013)
+	Importar a Postgis
+		raster2pgsql -s SRID -I -C -M *.tif -F -t 100x100 tablename | psql -d database
+		shp2pgsql -s SRID -W LATIN1 (omitir si es utf8) x.shp tablename | psql -d database
+		ogr2ogr -a_srs EPSG: -f PostgreSQL PG:dbname=db x.shp 
+			
+Medio físico (geología, geomorfología, hidrografía, vegetación etc) (revisado 11.04.2013)
+	Estabilidad de taludes
+		ARCGIS
+			Crear SHP y digitalizar poligonos (sinclinales y anticlinares)
+			Asignar a SHP los buzamientos promedio de los poligonos
+			Generar ASPECT
+			COMBINE
+			Actualizar tabla del producto combinado
+
+	NDVI
+		NDVI = (NIR — VIS)/(NIR + VIS) ó arctangent (NIR — red)/(NIR + red)
+		NIR: near infra red
+		VIS: visible (red)
+		SPOT5:
+			B1 : green
+			B2 : red <
+			B3 : near infrared <
+			B4 : mid infrared (MIR)
+
+		Landsat7 ETM+ de 8 bandas
+			B1: blue-green 
+			B2: green 
+			B3: red <
+			B4: near infrared <
+			B5: mid infrared (MIR)
+			B6: Thermal infrared
+			B7: mid infrared
+			B8: panchromatic
+
+Raster
+	Mapas temáticos con relieve (composition mode)
+		Usar Hue del mapa temático
+		Usar Intensity o brightness de un mapa de relieve sombreado
+		
+	Superficies (revisado 11.04.2013)
+		para superficies rapidas usar QGIS (TIN)
+		para mas detalladas descargas dem (resolucion hasta 30 m) sino usar GRASS (v.sur.bspline)
+
+		QGIS 
+			Eliminar
+				Elevaciones atípicas
+				polilineas aglomeradas en puntos
+
+			Producir superficie
+				TIN f
+					herramienta interpolar en menu raster
+				
+				IDW (Terriblemente lento)
+
+			Verificar errores
+
+Sistemas de coordenadas
+	Identificar
+		OGR
+			ogrinfo -al -so *.shp
+
+	Sistemas
+		Sistemas de Referencia Territorial (SRT), Terrestrial Reference Systems (TRS) o Geodetic Datum
+			País		Nombre											Elipsoide (elliposid)
+			-----------------------------------------------------------------------------------------------------------------------------
+			GPS		WGS84  (World Geodetic System 1984)							GRS80		
+			Great Britain	ETRS89 (European Terrestrial Reference System) (similar a WGS84 en la época 1989)	GRS80
+					OSGB36 (Ordnance Survey Great Britain)							Airy 1830
+			Venezuela	SIRGAS (Sistema de Referencia Geocentrico para las Américas)				GRS80
+					PSAD56 (Provisional South American Datum 1956)						International 1924
+			-----------------------------------------------------------------------------------------------------------------------------
+
+		Geoides locales (para altura ortometrica, orthometric height, altura geoidal o geoid height)
+			País		Nombre
+			----------------------------------------------------------------------
+			Great Britain 	Ordnance Datum Newlyn (ODN) vertical coordinate system
+			----------------------------------------------------------------------
+
+		Marco de Referencia Territorial (MRT) o Terrestrial Reference Frame (TRF) (realizaciones de los datums)
+			Datum								Nombre
+			---------------------------------------------------------------------------------------------------------------------
+			WGS84								WGS84 broadcast TRF (satelites mismos)
+			WGS84 ó International Terrestrial Reference System (ITRS)	International Terrestrial Reference Frame (ITRF)
+											International GNSS Service (IGS)
+			ETRS89								ETRF89
+											OS Net (densificación oficial de gb de ETRF89)
+			SIRGAS								REGVEN (densificación oficial de Venezuela de SIRGAS)
+			---------------------------------------------------------------------------------------------------------------------
+
+		Sistemas de coordenadas
+			-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			País		Nombre					Datum			TRF 				Proyección
+			Great Britain	OS Net					ETRS89			ETRF89 (Densificación)		n/a, 3D
+					National Grid 				OSGB36			OSGB36				Ordnance Survey National Grid Projection (celdas 100km), UTM (usado con intl 1924)(29 9w, 30 3w, 31 3e)
+					Ordnance Datum Newlyn (ODN) (vertical)	ODN			fundamental bench marks (FBMs)
+			-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		Transformaciones geodéticas (solo se dan entre TRF y no entre TRS)
+			Origen			Destino		Nombre
+			---------------------------------------------------------------------------
+			OS net (ETRS89) 	OSGB36		National Grid Transformation OSTN02
+			OS net (ETRS89)		ODN		National Geoid Model OSGM02
+			---------------------------------------------------------------------------
+
+		Parámetros para definir un Datum Geodésico
+			Centro (tres parámetros)
+			Dirección de los ejes (tres parámetros)
+			Forma del elipsoide (un parámetro)
+			Tamaño del elipsoide (un parámetro)
+
+	SRID
+		wgs84: 4326
+		wgs84_utm19N: 32619
+		wgs84_utm20N: 32620
+		osgb36_national_grid: 27700
+		osgb36 not projected: 4277		
+		loma quintana: 4288
+		ETRS89: 4258
+		swedish ref: 3006
+		
+	Transformaciones
+		ArcGis
+			Spatial adjustment toolbar
+			
+	Grid reference
+	    The grid is divided in squares as follow
+			first letter: 500 x 500 km
+				SU: 400 km
+				TQ: 500 km
+			second letter: 100 x 100 km 
+			two numbers: 10 x 10 km xy
+			four numbers: 1 x 1 km xxyy
+			six numbers: 100 x 100 m xxxyyy
+			eight numbers: 10 x 10 m xxxxyyyy
+			ten numbers: 1 x 1 m xxxxxyyyyy
+		
+Vectores
+	Actualizar áreas con valores de puntos
+		ArcGIS
+			analysis tools
+				overlay
+					spatial join
+
+	Agregar vectores (de multiparte a partes unicas)
+		Postgis (mucha más capacidad)
+			UPDATE hipso_coleccion SET the_geom=(SELECT ST_Collect(the_geom) FROM hipsometria2 where hipsometria2.value=hipso_coleccion.value);
+
+	Área edificada dentro la parcela 
+		ArcGIS
+			Si las edificaciones no se repiten
+				intersectar parcelas y edificaciones (analysis tools - overlay - interect)
+				calcular el área de las plantas (spatial statistics tool - utilities - calculate areas)
+				sumar areas de plantas dentro de una misma parcela (analysis tools - statistics - frequency, usar parcela como unidad y sumar area)
+				juntar tabla area con tabla parcela y exportar capa
+
+			Si las edificaciones se repiten
+				intersectar parcelas y edificaciones (analysis tools - overlay - interect)
+				rasterizar la intersección
+				juntar tabla area con tabla parcela y exportar capa
+
+
+	Crear elementos en una capa seleccionando elementos de otra capa
+		ArcGIS
+			construct features
+
+Procedimiento					ArcGis							Qgis
+------------------------------------
+#Raster
+
+Cuencas					flow diraction+basin						
+Mapa de colores												propiedades capa (valor es el limite superior del rango)
+Pendientes				slope
+Proyectar				project y project raster					gdalwarp -s_srs 'EPSG:1' -t_srs 'EPSG:2' orig.img final.tif   
+Reclasificar				Reclassify
+Superficies				TIN create/edit (3d analyst) y topo to raster
+Superponer				combine
+Tabla de atributos			build raster attribute table
+	
+#Vectorial
+
+Digitalizar desde dwg			construct features (topology toolbar)
+Exportar puntos como texto (DWG)	Add cad fields (columnas Txtvalue=texto y cadtype=TEXT)
+
+newline mapinfo Chr$(13)
+newline Qgis ||'\n' ||  
+
+georeferencer (lzw .10 res, deflate smaller not supported by mapinfo)
+
+

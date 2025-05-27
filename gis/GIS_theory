@@ -1,0 +1,51 @@
+GIS Theory and methods
+Basic elements
+	scale 
+	grid
+	north arrow 
+	legend
+	title
+	projection
+Types of attributes
+	nominal or categorical
+	ordinal or ranked (no clear relation between ranks)
+	interval (clear relation between intervals, no absolute 0)
+	ratio (clear relation between values, absolute 0)
+	cyclic
+Representations
+	discrete (defining boundaries is hard - use index)
+	continuos or fields
+Accuracy
+	maps and measurements vary on accuracy.
+	UNDERSTAND YOUR DATA AND HOW WAS CREATED.
+	accuracy comes with a price (trade off)
+	sometimes fuzzy definitions or indexes are required
+	Modifiable areal unit problem (maup)
+Spatial autocorrelation (tobler's law)
+	"Everything is related to everything else,
+	but near things are more related than
+	distant things.”
+	assessment techniques:
+		Geary's
+		Moran's	
+		Getis-Ord General G
+		Local Indicators of Spatial Association
+Randomness of points
+	Expected model: Complete spatial randomness (csr) 
+	which follows a poisson distribution.
+	assessment techniques:
+		quadrant analysis 
+			compares with poisson using chi squared
+			affected by maup
+		ripley's k
+Neighbours
+	spatial weights matrix
+Regressions
+	geographically weighted regression (gwr)
+Surfaces
+	density
+	interpolation
+		polynomial
+		splines
+		idw
+		kriging
