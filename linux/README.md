@@ -1,4 +1,7 @@
-Instructions to set linux (Ubuntu) for personal use.
+# Common operations
+sudo apt update; sudo apt upgrade; sudo apt auto-remove; sudo apt auto-clean
+
+# Initial setting
 	
 - Prepare USB with startup disk creator
 - f9/f12 to boot using usb stick
