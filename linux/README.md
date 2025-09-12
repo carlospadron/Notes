@@ -1,6 +1,3 @@
-# Common operations
-sudo apt update; sudo apt upgrade; sudo apt auto-remove; sudo apt auto-clean
-
 # Initial setting
 	
 - Prepare USB with startup disk creator
