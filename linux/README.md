@@ -24,10 +24,11 @@
 ```curl -fL https://github.com/coursier/coursier/releases/latest/download/cs-x86_64-pc-linux.gz | gzip -d > cs && chmod +x cs && ./cs setup```
 
 # GIT
+```bash
 git config --global user.name "user"
 git config --global user.email "email"
 git init <!-- in folder where project should be -->
-
+```
 # GRUB
 to make permanent changes to grub
 ```sudo nano /etc/default/grub```
