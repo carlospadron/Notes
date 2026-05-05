@@ -3,7 +3,7 @@
 - Prepare USB with startup disk creator
 - f9/f12 to boot using usb stick
 - if needed, edit grub by pressing the key e
-- get list of packages and install: ```wget https://github.com/carlospadron/Notes/blob/master/linux/packages/ubuntu.txt; sudo apt install $(cat paquetes_ubuntu.txt)```
+- get list of packages and install: ```wget https://raw.githubusercontent.com/carlospadron/Notes/refs/heads/master/linux/packages/ubuntu.txt; sudo apt install $(cat ubuntu.txt)```
 - download and install
 	- dropbox ```dropbox start -i```
 	- chrome
