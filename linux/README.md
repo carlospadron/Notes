@@ -13,7 +13,7 @@
 	- rust
 	- vscode
 	- github cli
-	- pgadmin, https://www.pgadmin.org/download/pgadmin-4-apt/
+	- dbeaver
 - connect to accounts via gnome
 
 # AWS
